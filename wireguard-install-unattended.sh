@@ -330,9 +330,30 @@ AllowedIPs = ${CLIENT_WG_IPV4}/32,${CLIENT_WG_IPV6}/128" >>"/etc/wireguard/${SER
 
 	echo -e "\nHere is your client config file as a QR Code:"
 
-	qrencode -t ansiutf8 -l L <"${HOME_DIR}/${SERVER_WG_NIC}-client-${CLIENT_NAME}.conf"
+	#qrencode -t ansiutf8 -l L <"${HOME_DIR}/${SERVER_WG_NIC}-client-${CLIENT_NAME}.conf"
+
+	qrencode -t ansiutf8 -l L <"${HOME_DIR}/${SERVER_WG_NIC}-client-${CLIENT_NAME}.conf" > /root/client001.qrencode.conf
 
 	echo "It is also available in ${HOME_DIR}/${SERVER_WG_NIC}-client-${CLIENT_NAME}.conf"
+
+	#PrivateKey = [[PRIVATEKEY]]
+	#Address = [[ADDRESS]]
+	#DNS = [[DNS]]
+
+	#[Peer]
+	#PublicKey = [[PUBLICKEY]]
+	#PresharedKey = [[PRESHAREDKEY]]
+	#Endpoint = [[ENDPOINT]]
+	#AllowedIPs = [[ALLOWEDIPS]]
+
+	SERVER_PUB_IP=`grep SERVER_PUB_IP /etc/wireguard/params | cut -d "=" -f 2`
+
+	# Generating url
+	URL="https://revprx.ikoula.com/index.php?r=wsds/SendClientInfosByIP&TEMPLATE_ONE_CLICK=ONE_CLICK_WIREGUARD_RPI&ADRESSE_IP=${SERVER_PUB_IB}&PRIVATEKEY=${CLIENT_PRIV_KEY}&ADDRESS=${CLIENT_WG_IPV4}/32,${CLIENT_WG_IPV6}/128&DNS=${CLIENT_DNS_1},${CLIENT_DNS_2}&PUBLICKEY=${SERVER_PUB_KEY}&PRESHAREDKEY=${CLIENT_PRE_SHARED_KEY}&ENDPOINT=${ENDPOINT}&ALLOWEDIPS=0.0.0.0/0,::/0"
+
+	# Sending informations
+	/usr/bin/curl "${URL}"
+
 }
 
 function revokeClient() {
